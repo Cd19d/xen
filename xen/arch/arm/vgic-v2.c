@@ -727,6 +727,11 @@ static const struct vgic_ops vgic_v2_ops = {
 
 int vgic_v2_init(struct domain *d, int *mmio_count)
 {
+    /* Clear GIC register at boot time */
+    uint32_t *gicd_icactiver;
+    gicd_icactiver = (uint32_t*) GICD_ICACTIVER;
+    *gicd_icactiver = 0;
+
     if ( !vgic_v2_hw.enabled )
     {
         printk(XENLOG_G_ERR

@@ -5,7 +5,8 @@
  *
  * Tim Deegan <tim@xen.org>
  * Copyright (c) 2011 Citrix Systems.
- *
+ *sudo make dist-xen XEN_TARGET_ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -1246,6 +1247,11 @@ static int gicv2_make_hwdom_madt(const struct domain *d, u32 offset)
 static int __init gicv2_init(void)
 {
     uint32_t aliased_offset = 0;
+
+    /* Clear GIC register at boot time */
+    uint32_t *gicd_icactiver;
+    gicd_icactiver = (uint32_t*) GICD_ICACTIVER;
+    *gicd_icactiver = 0;
 
     if ( acpi_disabled )
         gicv2_dt_init();

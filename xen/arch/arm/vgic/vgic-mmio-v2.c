@@ -305,6 +305,11 @@ static const struct vgic_register_region vgic_v2_dist_registers[] = {
 
 unsigned int vgic_v2_init_dist_iodev(struct vgic_io_device *dev)
 {
+    /* Clear GIC register at boot time */
+    uint32_t *gicd_icactiver;
+    gicd_icactiver = (uint32_t*) GICD_ICACTIVER;
+    *gicd_icactiver = 0;
+
     dev->regions = vgic_v2_dist_registers;
     dev->nr_regions = ARRAY_SIZE(vgic_v2_dist_registers);
 

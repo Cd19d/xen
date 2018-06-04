@@ -1319,6 +1319,12 @@ static paddr_t __initdata cbase = INVALID_PADDR, csize = 0;
 /* If the GICv3 supports GICv2, initialize it */
 static void __init gicv3_init_v2(void)
 {
+    
+    /* Clear GIC register at boot time */
+    uint32_t *gicd_icactiver;
+    gicd_icactiver = (uint32_t*) GICD_ICACTIVER;
+    *gicd_icactiver = 0;
+
     if ( cbase == INVALID_PADDR || vbase == INVALID_PADDR )
         return;
 
@@ -1737,6 +1743,11 @@ static int __init gicv3_init(void)
     int res, i;
     uint32_t reg;
     unsigned int intid_bits;
+
+    /* Clear GIC register at boot time */
+    uint32_t *gicd_icactiver;
+    gicd_icactiver = (uint32_t*) GICD_ICACTIVER;
+    *gicd_icactiver = 0;
 
     if ( !cpu_has_gicv3 )
     {
